@@ -21,13 +21,13 @@ while read x; do
 done < ./backup/hosts.org
 
 
-for i in `ls ./conf/`
+for i in `ls ./conf/hosts.*`
 do
     echo "add $i"
     while read x; do
         echo $x
         echo $x >> ./hosts.new
-    done < ./conf/$i
+    done < $i
 done
 
 sudo cp $NEWHOSTS /etc/hosts

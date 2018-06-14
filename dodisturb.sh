@@ -1,4 +1,11 @@
 #!/bin/sh
+NEWHOSTS=./hosts.new
+
+#remove hosts.new
+if [ -f $NEWHOSTS ] 
+then
+    rm $NEWHOSTS
+fi
 
 if [ ! -f ./backup/hosts.org ] 
 then
@@ -6,6 +13,21 @@ then
     exit 1
 fi
 
+## copy from orignal hosts
+while read x; do
+    echo $x
+    echo $x >> $NEWHOSTS
+done < ./backup/hosts.org
 
-sudo cp ./backup/hosts.org /etc/hosts
+
+for i in `ls ./conf/*.allow`
+do
+    echo "add $i"
+    while read x; do
+        echo $x
+        echo $x >> ./hosts.new
+    done < $i
+done
+
+sudo cp $NEWHOSTS /etc/hosts
 sudo dscacheutil -flushcache
